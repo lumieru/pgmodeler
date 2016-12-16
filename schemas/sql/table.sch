@@ -18,7 +18,13 @@
   [ UNLOGGED]
 %end
 
-[ TABLE ] {name} ( $br
+[ TABLE ]
+
+  %if ({pgsql-ver} != "9.0") %and {if-not-exists} %then
+    [IF NOT EXISTS ]
+  %end
+
+ {name} ( $br
   %if {copy-table} %then
     $tb LIKE $sp {copy-table}
     %if %not {gen-alter-cmds} %then

@@ -223,6 +223,7 @@ namespace ParsersAttributes {
 	ID=QString("id"),
 	IDENTIFIER=QString("identifier"),
 	IDENT_FILE=QString("ident-file"),
+    IF_NOT_EXISTS=QString("if-not-exists"),
 	IGNORED_CHARS=QString("ignored-chars"),
 	IMPLICIT=QString("implicit"),
 	IMPORT=QString("import"),

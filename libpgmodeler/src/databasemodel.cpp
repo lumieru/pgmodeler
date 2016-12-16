@@ -4506,6 +4506,7 @@ Table *DatabaseModel::createTable(void)
 		setBasicAttributes(table);
 		xmlparser.getElementAttributes(attribs);
 
+        table->setIfNotExists(attribs[ParsersAttributes::IF_NOT_EXISTS]==ParsersAttributes::_TRUE_);
 		table->setWithOIDs(attribs[ParsersAttributes::OIDS]==ParsersAttributes::_TRUE_);
 		table->setUnlogged(attribs[ParsersAttributes::UNLOGGED]==ParsersAttributes::_TRUE_);
 		table->setGenerateAlterCmds(attribs[ParsersAttributes::GEN_ALTER_CMDS]==ParsersAttributes::_TRUE_);

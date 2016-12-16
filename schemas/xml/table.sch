@@ -2,6 +2,7 @@
 # CAUTION: Do not modify this file unless you know what you are doing.
 #          Code generation can be broken if incorrect changes are made.
 [<table name=] "{name}" 
+  %if {if-not-exists} %then [ if-not-exists="true"] %end
   %if {oids} %then [ oids="true"] %end
   %if {gen-alter-cmds} %then [ gen-alter-cmds="true"] %end
   %if {unlogged} %then [ unlogged="true"] %end

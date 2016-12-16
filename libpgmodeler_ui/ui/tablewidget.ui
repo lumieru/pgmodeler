@@ -125,6 +125,19 @@
         </property>
        </widget>
       </item>
+      <item row="2" column="3">
+       <widget class="QCheckBox" name="if_not_exists_chk">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>If Not Exists</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>

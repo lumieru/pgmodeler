@@ -48,7 +48,9 @@ TableWidget::TableWidget(QWidget *parent): BaseObjectWidget(parent, OBJ_TABLE)
 	connect(edt_data_tb, SIGNAL(clicked(bool)), this, SLOT(editData()));
 	misc_btns_lt->insertWidget(1, edt_data_tb);
 
-	fields_map[generateVersionsInterval(AFTER_VERSION, PgSQLVersions::PGSQL_VERSION_91)].push_back(unlogged_chk);
+    vector<QWidget *>& wigdetVec=fields_map[generateVersionsInterval(AFTER_VERSION, PgSQLVersions::PGSQL_VERSION_91)];
+    wigdetVec.push_back(unlogged_chk);
+    wigdetVec.push_back(if_not_exists_chk);
 	frame=generateVersionWarningFrame(fields_map);
 	table_grid->addWidget(frame, table_grid->count()+1, 0, 1, 2);
 	frame->setParent(this);
@@ -140,6 +142,7 @@ void TableWidget::hideEvent(QHideEvent *event)
 	Table *tab=dynamic_cast<Table *>(this->object);
 
 	parent_tables->removeRows();
+    if_not_exists_chk->setChecked(false);
 	with_oids_chk->setChecked(false);
 	unlogged_chk->setChecked(false);
 	attributes_tbw->setCurrentIndex(0);
@@ -261,6 +264,7 @@ void TableWidget::setAttributes(DatabaseModel *model, OperationList *op_list, Sc
 		}
 
 		parent_tables->clearSelection();
+        if_not_exists_chk->setChecked(table->ifNotExists());
 		with_oids_chk->setChecked(table->isWithOIDs());
 		unlogged_chk->setChecked(table->isUnlogged());
 		gen_alter_cmds_chk->setChecked(table->isGenerateAlterCmds());
@@ -644,6 +648,7 @@ void TableWidget::applyConfiguration(void)
 			registerNewObject();
 
 		table=dynamic_cast<Table *>(this->object);
+        table->setIfNotExists(if_not_exists_chk->isChecked());
 		table->setWithOIDs(with_oids_chk->isChecked());
 		table->setGenerateAlterCmds(gen_alter_cmds_chk->isChecked());
 		table->setUnlogged(unlogged_chk->isChecked());

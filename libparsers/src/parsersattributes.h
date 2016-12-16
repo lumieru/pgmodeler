@@ -237,6 +237,7 @@ namespace ParsersAttributes {
 	ICON,
 	ID,
 	IDENTIFIER,
+    IF_NOT_EXISTS,
 	IGNORED_CHARS,
 	IMPLICIT,
 	IMPORT,

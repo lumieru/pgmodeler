@@ -28,6 +28,7 @@ Table::Table(void) : BaseTable()
 	obj_type=OBJ_TABLE;
 	with_oid=gen_alter_cmds=unlogged=false;
     fill_factor=0;
+    if_not_exists=false;
 	attributes[ParsersAttributes::COLUMNS]=QString();
 	attributes[ParsersAttributes::INH_COLUMNS]=QString();
 	attributes[ParsersAttributes::CONSTRAINTS]=QString();
@@ -43,6 +44,7 @@ Table::Table(void) : BaseTable()
 	attributes[ParsersAttributes::INITIAL_DATA]=QString();
     attributes[ParsersAttributes::FACTOR]=QString();
     attributes[ParsersAttributes::STORAGE_PARAMS]=QString();
+    attributes[ParsersAttributes::IF_NOT_EXISTS]=QString();
 
 	copy_table=nullptr;
 	this->setName(trUtf8("new_table").toUtf8());
@@ -73,6 +75,12 @@ void Table::setSchema(BaseObject *schema)
 	QString prev_name=this->getName(true);
 	BaseObject::setSchema(schema);
 	PgSQLType::renameUserType(prev_name, this, this->getName(true));
+}
+
+void Table::setIfNotExists(bool value)
+{
+    setCodeInvalidated(if_not_exists != value);
+    if_not_exists=value;
 }
 
 void Table::setWithOIDs(bool value)
@@ -1134,6 +1142,11 @@ void Table::getForeignKeys(vector<Constraint *> &fks, bool inc_added_by_rel, Tab
 	}
 }
 
+bool Table::ifNotExists(void)
+{
+    return(if_not_exists);
+}
+
 bool Table::isWithOIDs(void)
 {
 	return(with_oid);
@@ -1373,6 +1386,7 @@ QString Table::getCodeDefinition(unsigned def_type)
 	QString code_def=getCachedCode(def_type, false);
 	if(!code_def.isEmpty()) return(code_def);
 
+    attributes[ParsersAttributes::IF_NOT_EXISTS]=(if_not_exists ? ParsersAttributes::_TRUE_ : QString());
     attributes[ParsersAttributes::STORAGE_PARAMS]=attributes[ParsersAttributes::OIDS]=(with_oid ? ParsersAttributes::_TRUE_ : QString());
 	attributes[ParsersAttributes::GEN_ALTER_CMDS]=(gen_alter_cmds ? ParsersAttributes::_TRUE_ : QString());
 	attributes[ParsersAttributes::UNLOGGED]=(unlogged ? ParsersAttributes::_TRUE_ : QString());

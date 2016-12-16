@@ -62,6 +62,9 @@ class Table: public BaseTable {
         //! \brief Fill factor used by the table
         unsigned fill_factor;
 
+        //! \brief Indicates whether to use "IF NOT EXISTS"
+        bool if_not_exists;
+
 		//! \brief Indicates if the table accepts OIDs
 		bool with_oid,
 
@@ -126,6 +129,9 @@ class Table: public BaseTable {
 
 		void setName(const QString &name);
 		void setSchema(BaseObject *schema);
+
+        //! \brief Defines whether the table uses "IF NOT EXISTS"
+        void setIfNotExists(bool value);
 
 		//! \brief Defines if the table accepts OIDs
 		void setWithOIDs(bool value);
@@ -291,6 +297,9 @@ class Table: public BaseTable {
 		 boolean paramenter is used to include those foreign keys includes by relationship. The third parameter
 		is used to filter the search, including only the foreign keys that references the specified table */
 		void getForeignKeys(vector<Constraint *> &fks, bool inc_added_by_rel=false, Table *ref_table=nullptr);
+
+        //! \brief Returns whether the table uses "IF NOT EXISTS"
+        bool ifNotExists(void);
 
 		//! \brief Returns if the table is configured with oids
 		bool isWithOIDs(void);
