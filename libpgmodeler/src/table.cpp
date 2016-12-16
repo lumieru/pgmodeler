@@ -27,6 +27,7 @@ Table::Table(void) : BaseTable()
 {
 	obj_type=OBJ_TABLE;
 	with_oid=gen_alter_cmds=unlogged=false;
+    fill_factor=0;
 	attributes[ParsersAttributes::COLUMNS]=QString();
 	attributes[ParsersAttributes::INH_COLUMNS]=QString();
 	attributes[ParsersAttributes::CONSTRAINTS]=QString();
@@ -40,6 +41,8 @@ Table::Table(void) : BaseTable()
 	attributes[ParsersAttributes::CONSTR_INDEXES]=QString();
 	attributes[ParsersAttributes::UNLOGGED]=QString();
 	attributes[ParsersAttributes::INITIAL_DATA]=QString();
+    attributes[ParsersAttributes::FACTOR]=QString();
+    attributes[ParsersAttributes::STORAGE_PARAMS]=QString();
 
 	copy_table=nullptr;
 	this->setName(trUtf8("new_table").toUtf8());
@@ -76,6 +79,15 @@ void Table::setWithOIDs(bool value)
 {
 	setCodeInvalidated(with_oid != value);
 	with_oid=value;
+}
+
+void Table::setFillFactor(unsigned factor)
+{
+    if(factor!=0 && factor < 10) factor=10;
+    else if(factor > 100) factor=100;
+
+    setCodeInvalidated(fill_factor != factor);
+    fill_factor=factor;
 }
 
 void Table::setUnlogged(bool value)
@@ -1127,6 +1139,11 @@ bool Table::isWithOIDs(void)
 	return(with_oid);
 }
 
+unsigned Table::getFillFactor(void)
+{
+    return(fill_factor);
+}
+
 bool Table::isUnlogged(void)
 {
 	return(unlogged);
@@ -1356,12 +1373,20 @@ QString Table::getCodeDefinition(unsigned def_type)
 	QString code_def=getCachedCode(def_type, false);
 	if(!code_def.isEmpty()) return(code_def);
 
-	attributes[ParsersAttributes::OIDS]=(with_oid ? ParsersAttributes::_TRUE_ : QString());
+    attributes[ParsersAttributes::STORAGE_PARAMS]=attributes[ParsersAttributes::OIDS]=(with_oid ? ParsersAttributes::_TRUE_ : QString());
 	attributes[ParsersAttributes::GEN_ALTER_CMDS]=(gen_alter_cmds ? ParsersAttributes::_TRUE_ : QString());
 	attributes[ParsersAttributes::UNLOGGED]=(unlogged ? ParsersAttributes::_TRUE_ : QString());
 	attributes[ParsersAttributes::COPY_TABLE]=QString();
 	attributes[ParsersAttributes::ANCESTOR_TABLE]=QString();
 	attributes[ParsersAttributes::TAG]=QString();
+
+    if(fill_factor >= 10)
+    {
+        attributes[ParsersAttributes::FACTOR]=QString("%1").arg(fill_factor);
+        attributes[ParsersAttributes::STORAGE_PARAMS]=ParsersAttributes::_TRUE_;
+    }
+    else if(def_type==SchemaParser::XML_DEFINITION)
+        attributes[ParsersAttributes::FACTOR]=QString("0");
 
 	if(def_type==SchemaParser::SQL_DEFINITION && copy_table)
 		attributes[ParsersAttributes::COPY_TABLE]=copy_table->getName(true) + copy_op.getSQLDefinition();

@@ -59,6 +59,9 @@ class Table: public BaseTable {
 		//! \brief Specifies the copy table options
 		CopyOptions copy_op;
 
+        //! \brief Fill factor used by the table
+        unsigned fill_factor;
+
 		//! \brief Indicates if the table accepts OIDs
 		bool with_oid,
 
@@ -129,6 +132,9 @@ class Table: public BaseTable {
 
 		//! \brief Defines if the table is unlogged
 		void setUnlogged(bool value);
+
+        //! \brief Defines the table fill factor
+        void setFillFactor(unsigned factor);
 
 		//! \brief Adds an object to the table. It can be inserted at a specified index 'obj_idx'.
 		void addObject(BaseObject *obj, int obj_idx=-1);
@@ -310,6 +316,9 @@ class Table: public BaseTable {
 
 		//! \brief Returns if the table references objects added by relationship
 		bool isReferRelationshipAddedObject(void);
+
+        //! \brief Returns the table fill factor
+        unsigned getFillFactor(void);
 
 		//! \brief Copy the attributes between two tables
 		void operator = (Table &tabela);

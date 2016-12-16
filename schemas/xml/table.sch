@@ -14,6 +14,8 @@
    [ sql-disabled=] "true"
   %end
 
+  [ factor=] "{factor}"
+
 > $br
 
  {schema}

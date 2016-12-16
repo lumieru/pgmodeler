@@ -44,7 +44,22 @@
 $br )
 
 %if {ancestor-table} %then [ INHERITS(] {ancestor-table} [)] $br %end
-%if {oids} %then [WITH ( OIDS = TRUE )] %end
+
+%if {stg-params} %then
+ $tb [WITH (]
+
+ %if {factor} %then
+  [FILLFACTOR = ] {factor}
+ %end
+
+ %if {oids} %then
+  %if {factor} %then [, ] %end
+  [OIDS = TRUE]
+ %end
+
+[)]
+%end
+
 %if {tablespace} %then
  $br [TABLESPACE ] {tablespace}
 %end

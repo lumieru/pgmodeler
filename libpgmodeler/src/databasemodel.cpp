@@ -4509,6 +4509,9 @@ Table *DatabaseModel::createTable(void)
 		table->setWithOIDs(attribs[ParsersAttributes::OIDS]==ParsersAttributes::_TRUE_);
 		table->setUnlogged(attribs[ParsersAttributes::UNLOGGED]==ParsersAttributes::_TRUE_);
 		table->setGenerateAlterCmds(attribs[ParsersAttributes::GEN_ALTER_CMDS]==ParsersAttributes::_TRUE_);
+        if(!attribs[ParsersAttributes::FACTOR].isEmpty())
+            table->setFillFactor(attribs[ParsersAttributes::FACTOR].toUInt());
+
 
 		if(xmlparser.accessElement(XMLParser::CHILD_ELEMENT))
 		{

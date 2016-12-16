@@ -53,6 +53,8 @@ TableWidget::TableWidget(QWidget *parent): BaseObjectWidget(parent, OBJ_TABLE)
 	table_grid->addWidget(frame, table_grid->count()+1, 0, 1, 2);
 	frame->setParent(this);
 
+    connect(fill_factor_chk, SIGNAL(toggled(bool)), fill_factor_sb, SLOT(setEnabled(bool)));
+
 	parent_tables = new ObjectTableWidget(ObjectTableWidget::NO_BUTTONS, true, this);
 	parent_tables->setColumnCount(3);
 	parent_tables->setHeaderLabel(trUtf8("Name"), 0);
@@ -141,6 +143,8 @@ void TableWidget::hideEvent(QHideEvent *event)
 	with_oids_chk->setChecked(false);
 	unlogged_chk->setChecked(false);
 	attributes_tbw->setCurrentIndex(0);
+    fill_factor_chk->setChecked(false);
+    fill_factor_sb->setValue(100);
 
 	itr=objects_tab_map.begin();
 	itr_end=objects_tab_map.end();
@@ -260,6 +264,13 @@ void TableWidget::setAttributes(DatabaseModel *model, OperationList *op_list, Sc
 		with_oids_chk->setChecked(table->isWithOIDs());
 		unlogged_chk->setChecked(table->isUnlogged());
 		gen_alter_cmds_chk->setChecked(table->isGenerateAlterCmds());
+
+        fill_factor_chk->setChecked(table->getFillFactor() >= 10);
+
+        if(fill_factor_chk->isChecked())
+            fill_factor_sb->setValue(table->getFillFactor());
+        else
+            fill_factor_sb->setValue(100);
 
 		tag_sel->setModel(this->model);
 		tag_sel->setSelectedObject(table->getTag());
@@ -637,6 +648,11 @@ void TableWidget::applyConfiguration(void)
 		table->setGenerateAlterCmds(gen_alter_cmds_chk->isChecked());
 		table->setUnlogged(unlogged_chk->isChecked());
 		table->setTag(dynamic_cast<Tag *>(tag_sel->getSelectedObject()));
+
+        if(fill_factor_chk->isChecked())
+            table->setFillFactor(fill_factor_sb->value());
+        else
+            table->setFillFactor(0);
 
 		BaseObjectWidget::applyConfiguration();
 
