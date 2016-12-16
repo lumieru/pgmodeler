@@ -5076,6 +5076,7 @@ Index *DatabaseModel::createIndex(void)
 		index->setIndexAttribute(Index::BUFFERING, attribs[ParsersAttributes::BUFFERING]==ParsersAttributes::_TRUE_);
 		index->setIndexingType(attribs[ParsersAttributes::INDEX_TYPE]);
 		index->setFillFactor(attribs[ParsersAttributes::FACTOR].toUInt());
+        index->setIfNotExists(attribs[ParsersAttributes::IF_NOT_EXISTS]==ParsersAttributes::_TRUE_);
 
 		if(xmlparser.accessElement(XMLParser::CHILD_ELEMENT))
 		{

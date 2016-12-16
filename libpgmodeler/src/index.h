@@ -46,6 +46,9 @@ class Index: public TableObject{
 		//! \brief Boolean attributes that define some index features  (UNIQUE, CONCURRENT, FAST UPDATE, BUFFERING)
 		bool index_attribs[4];
 
+        //! \brief Indicates whether to use "IF NOT EXISTS"
+        bool if_not_exists;
+
 		//! \brief Formats the elements string used by the SchemaParser
 		void setIndexElementsAttribute(unsigned def_type);
 
@@ -101,6 +104,9 @@ class Index: public TableObject{
 		//! \brief Defines the index fill factor
 		void setFillFactor(unsigned factor);
 
+        //! \brief Defines whether the index uses "IF NOT EXISTS"
+        void setIfNotExists(bool value);
+
 		//! \brief Gets the index conditional expression
 		QString getPredicate(void);
 
@@ -115,6 +121,9 @@ class Index: public TableObject{
 
 		//! \brief Returns the index fill factor
 		unsigned getFillFactor(void);
+
+        //! \brief Returns whether the index uses "IF NOT EXISTS"
+        bool ifNotExists(void);
 
 		//! \brief Returns the SQL / XML definition for the index
 		virtual QString getCodeDefinition(unsigned def_type) final;

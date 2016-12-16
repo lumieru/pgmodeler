@@ -46,7 +46,9 @@ IndexWidget::IndexWidget(QWidget *parent): BaseObjectWidget(parent, OBJ_INDEX)
 		indexing_cmb->addItems(list);
 
 		fields_map[BaseObjectWidget::generateVersionsInterval(BaseObjectWidget::AFTER_VERSION, PgSQLVersions::PGSQL_VERSION_92)].push_back(buffering_chk);
-		fields_map[BaseObjectWidget::generateVersionsInterval(BaseObjectWidget::AFTER_VERSION, PgSQLVersions::PGSQL_VERSION_95)].push_back(indexing_lbl);
+        vector<QWidget *>& version9_5=fields_map[BaseObjectWidget::generateVersionsInterval(BaseObjectWidget::AFTER_VERSION, PgSQLVersions::PGSQL_VERSION_95)];
+        version9_5.push_back(if_not_exists_chk);
+        version9_5.push_back(indexing_lbl);
 		values_map[indexing_lbl].push_back(~IndexingType(IndexingType::brin));
 
 		frame=BaseObjectWidget::generateVersionWarningFrame(fields_map, &values_map);
@@ -81,6 +83,7 @@ void IndexWidget::hideEvent(QHideEvent *event)
 	fill_factor_sb->setValue(90);
 	tabWidget->setCurrentIndex(0);
 	elements_wgt->clear();
+    if_not_exists_chk->setChecked(false);
 }
 
 void IndexWidget::selectIndexingType(void)
@@ -132,6 +135,7 @@ void IndexWidget::setAttributes(DatabaseModel *model, OperationList *op_list, Ta
 		unique_chk->setChecked(index->getIndexAttribute(Index::UNIQUE));
 		buffering_chk->setChecked(index->getIndexAttribute(Index::BUFFERING));
 		predicate_txt->setPlainText(index->getPredicate());
+        if_not_exists_chk->setChecked(index->ifNotExists());
 
 		selectIndexingType();
 	}
@@ -158,6 +162,7 @@ void IndexWidget::applyConfiguration(void)
 		index->setIndexAttribute(Index::BUFFERING, buffering_chk->isChecked());
 		index->setPredicate(predicate_txt->toPlainText().toUtf8());
 		index->setIndexingType(IndexingType(indexing_cmb->currentText()));
+        index->setIfNotExists(if_not_exists_chk->isChecked());
 
 		if(fill_factor_chk->isChecked())
 			index->setFillFactor(fill_factor_sb->value());

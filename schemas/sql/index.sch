@@ -18,6 +18,10 @@
  [ CONCURRENTLY ]
 %end
 
+%if {name} %and {if-not-exists} %and ({pgsql-ver} >= "9.5") %then
+ [IF NOT EXISTS ]
+%end
+
 {name} [ ON ] {table}
 
 %if {index-type} %then

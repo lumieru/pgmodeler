@@ -24,6 +24,7 @@ Index::Index(void)
 	index_attribs[UNIQUE]=index_attribs[CONCURRENT]=
 			index_attribs[FAST_UPDATE]=index_attribs[BUFFERING]=false;
 	fill_factor=90;
+    if_not_exists=false;
 	attributes[ParsersAttributes::UNIQUE]=QString();
 	attributes[ParsersAttributes::CONCURRENT]=QString();
 	attributes[ParsersAttributes::TABLE]=QString();
@@ -40,6 +41,7 @@ Index::Index(void)
 	attributes[ParsersAttributes::FAST_UPDATE]=QString();
 	attributes[ParsersAttributes::BUFFERING]=QString();
 	attributes[ParsersAttributes::STORAGE_PARAMS]=QString();
+    attributes[ParsersAttributes::IF_NOT_EXISTS]=QString();
 }
 
 void Index::setIndexElementsAttribute(unsigned def_type)
@@ -214,6 +216,12 @@ void Index::setFillFactor(unsigned factor)
 	fill_factor=factor;
 }
 
+void Index::setIfNotExists(bool value)
+{
+    setCodeInvalidated(if_not_exists != value);
+    if_not_exists=value;
+}
+
 void Index::setIndexingType(IndexingType idx_type)
 {
 	setCodeInvalidated(indexing_type != idx_type);
@@ -230,6 +238,11 @@ void Index::setPredicate(const QString &expr)
 unsigned Index::getFillFactor(void)
 {
 	return(fill_factor);
+}
+
+bool Index::ifNotExists(void)
+{
+    return(if_not_exists);
 }
 
 bool Index::getIndexAttribute(unsigned attrib_id)
@@ -336,6 +349,7 @@ QString Index::getCodeDefinition(unsigned def_type)
 	attributes[ParsersAttributes::INDEX_TYPE]=(~indexing_type);
 	attributes[ParsersAttributes::PREDICATE]=predicate;
 	attributes[ParsersAttributes::STORAGE_PARAMS]=QString();
+    attributes[ParsersAttributes::IF_NOT_EXISTS]=(if_not_exists ? ParsersAttributes::_TRUE_ : QString());
 
 	if(getParentTable())
 	{
