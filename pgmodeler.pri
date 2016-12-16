@@ -112,8 +112,10 @@ macx {
   !defined(SAMPLESDIR, var):    SAMPLESDIR = $$BINDIR/samples
   !defined(SCHEMASDIR, var):    SCHEMASDIR = $$BINDIR/schemas
 
+  QMAKE_LFLAGS_SONAME = -Wl,-install_name,@rpath/
+
   # Specifies where to find the libraries at runtime
-  # QMAKE_RPATHDIR += @executable_path/../Frameworks
+  QMAKE_RPATHDIR += @executable_path/../Frameworks
 }
 
 # Creating constants based upon the custom paths so the GlobalAttributes
@@ -145,9 +147,9 @@ unix:!macx {
 }
 
 macx {
-  PGSQL_LIB = /Library/PostgreSQL/9.5/lib/libpq.dylib
-  PGSQL_INC = /Library/PostgreSQL/9.5/include
-  XML_INC = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/usr/include/libxml2
+  PGSQL_LIB = /Library/PostgreSQL/9.6/lib/libpq.dylib
+  PGSQL_INC = /Library/PostgreSQL/9.6/include
+  XML_INC = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/libxml2
   XML_LIB = /usr/lib/libxml2.dylib
   INCLUDEPATH += $$PGSQL_INC $$XML_INC
 }
